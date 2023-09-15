@@ -8,14 +8,18 @@ const bodyParser = require("body-parser");
 const app = express();
 
 // Set up MongoDB connection (Make sure you have MongoDB running)
-mongoose
-    .connect(process.env.URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(console.log("DB connected"));
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
+connectDB().catch((err) => console.log(err.message));
+
+async function connectDB() {
+    await mongoose
+        .connect(process.env.URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        .then(console.log("DB connected"));
+    const db = mongoose.connection;
+    db.on("error", console.error.bind(console, "MongoDB connection error:"));
+}
 
 // Define a Person schema and model
 const personSchema = new mongoose.Schema({
